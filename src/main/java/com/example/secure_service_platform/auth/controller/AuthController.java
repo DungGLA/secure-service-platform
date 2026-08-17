@@ -1,5 +1,7 @@
 package com.example.secure_service_platform.auth.controller;
 
+import com.example.secure_service_platform.auth.dto.LoginRequest;
+import com.example.secure_service_platform.auth.dto.LoginResponse;
 import com.example.secure_service_platform.auth.dto.RegisterRequest;
 import com.example.secure_service_platform.auth.dto.RegisterResponse;
 import com.example.secure_service_platform.auth.service.AuthService;
@@ -25,6 +27,15 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(authService.register(request));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(
+            @Valid @RequestBody LoginRequest request) {
+
+        return ResponseEntity.ok(
+                authService.login(request)
+        );
     }
 
 }
