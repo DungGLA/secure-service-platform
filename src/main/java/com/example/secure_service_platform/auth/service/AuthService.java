@@ -5,12 +5,14 @@ import com.example.secure_service_platform.auth.dto.LoginResponse;
 import com.example.secure_service_platform.auth.dto.RegisterRequest;
 import com.example.secure_service_platform.auth.dto.RegisterResponse;
 import com.example.secure_service_platform.common.exception.EmailAlreadyExistsException;
+import com.example.secure_service_platform.security.jwt.JwtService;
 import com.example.secure_service_platform.user.entity.User;
 import com.example.secure_service_platform.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     public RegisterResponse register(RegisterRequest request) {
 
@@ -51,6 +54,10 @@ public class AuthService {
                         request.password())
         );
 
-        return new LoginResponse("Login successful for user: " + request.email() + "");
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String accessToken = jwtService.generateToken(userDetails);
+
+
+        return new LoginResponse(accessToken, "Bearer");
     }
 }
