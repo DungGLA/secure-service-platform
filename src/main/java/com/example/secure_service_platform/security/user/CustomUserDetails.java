@@ -3,11 +3,13 @@ package com.example.secure_service_platform.security.user;
 import com.example.secure_service_platform.user.entity.User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
@@ -19,7 +21,16 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return user.getRoles()
+                .stream()
+                .flatMap(role ->
+                        Stream.concat(Stream.of(new SimpleGrantedAuthority("ROLE_" + role.getName())),
+                                role.getPermissions()
+                                        .stream()
+                                        .map(permission -> new SimpleGrantedAuthority(permission.getName()))
+                        )
+                )
+                .toList();
     }
 
     @Override
