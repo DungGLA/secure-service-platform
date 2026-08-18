@@ -1,6 +1,5 @@
 package com.example.secure_service_platform.user.entity;
 
-import com.example.secure_service_platform.permission.entity.Permission;
 import com.example.secure_service_platform.role.entity.Role;
 import jakarta.persistence.*;
 import lombok.Builder;

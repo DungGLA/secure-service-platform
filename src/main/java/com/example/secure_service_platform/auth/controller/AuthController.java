@@ -1,9 +1,6 @@
 package com.example.secure_service_platform.auth.controller;
 
-import com.example.secure_service_platform.auth.dto.LoginRequest;
-import com.example.secure_service_platform.auth.dto.LoginResponse;
-import com.example.secure_service_platform.auth.dto.RegisterRequest;
-import com.example.secure_service_platform.auth.dto.RegisterResponse;
+import com.example.secure_service_platform.auth.dto.*;
 import com.example.secure_service_platform.auth.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -35,6 +32,15 @@ public class AuthController {
 
         return ResponseEntity.ok(
                 authService.login(request)
+        );
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<LoginResponse> refresh(
+            @Valid @RequestBody RefreshTokenRequest request) {
+
+        return ResponseEntity.ok(
+                authService.refresh(request)
         );
     }
 
